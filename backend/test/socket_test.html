@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<body>
+    <p id="user">coolguy69</p>
+    <p id="room"> Cool Guy Chat </p>
+    <ul id="message" style="list-style-type: none;"></ul>
+    <form id="msgform" action="">
+        <input autocomplete="off" id='msgtxt'><button>Enter</button>
+    </form>
+    <script src="/../socket.io/socket.io.js"></script>
+    <script>
+        var socket = io()
+        let room = document.getElementById('room').innerHTML
+        let user = document.getElementById('user').innerHTML
+        console.log(room)
+        socket.emit('join', room)
+        var messages = document.getElementById('message')
+        function emitMsg(e) {
+            e.preventDefault()
+            let msg = document.getElementById('msgtxt')
+            socket.emit('chat', room, msg.value, user)
+            msg.value = ''
+        }
+        socket.on('chat_msg', (msg) => {
+            var item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+        })
+        document.getElementById('msgform').addEventListener('submit', emitMsg)
+    </script>
+</body>
